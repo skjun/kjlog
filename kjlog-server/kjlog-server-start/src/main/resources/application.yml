@@ -1,0 +1,12 @@
+server:
+  port: 9083
+logging:
+  level:
+    org.springframework: INFO
+
+system:
+  udp:
+    port: 10110
+spring:
+  profiles:
+    include: mysql,es,solr,lucene
