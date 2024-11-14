@@ -1,13 +1,13 @@
 package com.skjun.log.agent.upload.udp;
 
 import com.skjun.log.agent.core.config.LogConfig;
-import com.skjun.log.agent.core.dto.TraceUpData;
 import com.skjun.log.agent.core.handler.AbstractUpHandler;
 import com.skjun.log.agent.core.handler.node.Node;
 import com.skjun.log.agent.core.handler.node.SmoothWeightedRoundRobin;
 import com.skjun.log.agent.core.util.AsyncPool;
 import com.skjun.log.agent.core.util.ProtostuffUtils;
 import com.skjun.log.agent.core.util.ZstdUtils;
+import com.skjun.log.server.lib.dto.TraceUpData;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;

@@ -3,7 +3,8 @@ package com.skjun.log.agent.collect.logback;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import com.skjun.log.agent.core.data.DataSenderInit;
-import com.skjun.log.agent.core.dto.LogUpMessage;
+import com.skjun.log.server.lib.dto.LogUpMessage;
+import com.skjun.log.server.lib.dto.detail.LogMessage;
 
 public class KjLogBackAppender  extends AppenderBase<ILoggingEvent> {
 
@@ -25,7 +26,8 @@ public class KjLogBackAppender  extends AppenderBase<ILoggingEvent> {
      * 转化为对象
      */
     private LogUpMessage getLogMessage(ILoggingEvent loggingEvent) {
-        LogUpMessage logMessage = new LogUpMessage();
+        LogUpMessage<LogMessage> logUpMessage = new LogUpMessage<>();
+        LogMessage logMessage = new LogMessage();
         //设置链路唯一id
 //        logMessage.setTracerId(TracerHolder.getTracerId());
         logMessage.setClassName(loggingEvent.getLoggerName());
@@ -35,8 +37,10 @@ public class KjLogBackAppender  extends AppenderBase<ILoggingEvent> {
         logMessage.setMethodName(method);
         logMessage.setLogLevel(loggingEvent.getLevel().toString());
         logMessage.setCreateTime(loggingEvent.getTimeStamp());
-        logMessage.setContent(loggingEvent.getMessage());
-        return logMessage;
+        logMessage.setContent(loggingEvent.getFormattedMessage());
+        logUpMessage.setMessage(logMessage);
+        logUpMessage.setType(LogUpMessage.LOG_TYPE);
+        return logUpMessage;
     }
 
 

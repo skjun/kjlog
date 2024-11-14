@@ -1,8 +1,8 @@
 package com.skjun.log.agent.upload.redis;
 
 import com.skjun.log.agent.core.config.LogConfig;
-import com.skjun.log.agent.core.dto.TraceUpData;
 import com.skjun.log.agent.core.handler.AbstractUpHandler;
+import com.skjun.log.server.lib.dto.TraceUpData;
 
 public class AbstractUpRedisHandler extends AbstractUpHandler {
     @Override

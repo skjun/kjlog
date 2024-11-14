@@ -42,7 +42,7 @@ public class SmoothWeightedRoundRobin {
     public Node select() {
         try {
             lock.lock();
-            if (nodeList != null && nodeList.size() != 0) {
+            if (nodeList != null && !nodeList.isEmpty()) {
                 return this.selectInner();
             }
             return null;
@@ -55,7 +55,7 @@ public class SmoothWeightedRoundRobin {
         try {
             lock.lock();
 
-            if (nodeList == null || nodeList.size() == 0) {
+            if (nodeList == null || nodeList.isEmpty()) {
                 return null;
             }
 

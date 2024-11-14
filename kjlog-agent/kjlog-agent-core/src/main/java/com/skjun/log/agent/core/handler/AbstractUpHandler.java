@@ -1,7 +1,8 @@
 package com.skjun.log.agent.core.handler;
 
 import com.skjun.log.agent.core.config.LogConfig;
-import com.skjun.log.agent.core.dto.TraceUpData;
+import com.skjun.log.server.lib.dto.TraceUpData;
+
 import java.util.logging.Logger;
 
 public abstract class AbstractUpHandler {

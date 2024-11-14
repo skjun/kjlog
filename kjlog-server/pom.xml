@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.4</version>
+        <version>2.7.18</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -17,19 +17,18 @@
     <packaging>pom</packaging>
     <modules>
         <module>kjlog-server-core</module>
-
-        <module>kjlog-server-receive/kjlog-server-receive-http</module>
-        <module>kjlog-server-receive/kjlog-server-receive-redis</module>
-        <module>kjlog-server-receive/kjlog-server-receive-udp</module>
-
+        <module>kjlog-server-receive</module>
+        <module>kjlog-server-analysis</module>
         <module>kjlog-server-store/kjlog-server-elksearch</module>
         <module>kjlog-server-store/kjlog-server-store-lucene</module>
         <module>kjlog-server-store/kjlog-server-store-mysql</module>
         <module>kjlog-server-store/kjlog-server-store-solr</module>
         <module>kjlog-server-start</module>
+        <module>kjlog-admin-service</module>
     </modules>
 
     <properties>
+        <spring-boot.version>2.7.18</spring-boot.version>
         <log4j.version>2.17.1</log4j.version>
         <log4j2.version>2.17.1</log4j2.version>
         <logback.version>1.2.3</logback.version>
@@ -41,12 +40,17 @@
         <protostuff.version>1.7.2</protostuff.version>
         <lucene.version>7.1.0</lucene.version>
         <hutool.version>5.8.26</hutool.version>
-
+        <spring-boot.mybatis>2.3.2</spring-boot.mybatis>
+        <mybatis-plus.version>3.5.4</mybatis-plus.version>
         <swagger-bootstrap-ui.version>1.9.0</swagger-bootstrap-ui.version>
         <io.swagger.version>1.5.22</io.swagger.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <hutool.version>5.8.3</hutool.version>
+
+
     </properties>
 
 </project>

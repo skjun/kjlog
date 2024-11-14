@@ -1,0 +1,10 @@
+{
+  "type": "udp",
+  "udpServers": ["127.0.0.1:10110"],
+  "httpServers": [],
+  "localUdpPort": 8765,
+  "sysMonitor": true,
+  "delayTime": 60,
+  "serviceCode": "testc",
+  "machineId": "123"
+}

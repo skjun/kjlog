@@ -2,8 +2,9 @@ package com.skjun.log.server.store.lucene.handler;
 
 import cn.hutool.core.date.DateTime;
 import com.skjun.log.server.core.deal.LogDataDealHandler;
-import com.skjun.log.server.core.dto.LogUpMessage;
-import com.skjun.log.server.core.dto.TraceUpData;
+import com.skjun.log.server.lib.dto.LogUpMessage;
+import com.skjun.log.server.lib.dto.TraceUpData;
+import com.skjun.log.server.lib.dto.detail.LogMessage;
 import com.skjun.log.server.store.lucene.config.LuceneConfig;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
@@ -52,6 +53,11 @@ public class LuceneLogDataHandler implements LogDataDealHandler {
         }
     }
 
+    @Override
+    public void query() {
+
+    }
+
     private String getStoreIndex(){
         return DateTime.of(System.currentTimeMillis()).toString("YYYYMMDD");
     }
@@ -81,23 +87,31 @@ public class LuceneLogDataHandler implements LogDataDealHandler {
 
     private Collection<Document> convertToDoc(TraceUpData traceUpData) {
         Collection<Document> docs = new ArrayList<>();
-        for (LogUpMessage rm : traceUpData.getUpLogs()) {
-            Document document = new Document();
-            document.add(new StringField("id", UUID.randomUUID().toString(), Field.Store.YES));
+        for (LogUpMessage upMessage : traceUpData.getUpLogs()) {
 
-            document.add(new StringField("logLevel", (rm.getLogLevel() == null) ? "" : rm.getLogLevel(), Field.Store.YES));
-            document.add(new SortedDocValuesField("logLevel", new BytesRef((rm.getLogLevel() == null) ? "" : rm.getLogLevel())));
+            if(LogUpMessage.LOG_TYPE.equals(upMessage.getType())){
 
-            document.add(new TextField("content", (rm.getContent() == null) ? "" : rm.getContent(), Field.Store.YES));
+                LogMessage rm = (LogMessage) upMessage.getMessage();
 
-            document.add(new StringField("threadName", (rm.getThreadName() == null) ? "" : rm.getThreadName(), Field.Store.YES));
-            document.add(new StringField("methodName", (rm.getMethodName() == null) ? "" : rm.getMethodName(), Field.Store.YES));
-            document.add(new StringField("className", (rm.getClassName() == null) ? "" : rm.getClassName(), Field.Store.YES));
+                Document document = new Document();
+                document.add(new StringField("id", UUID.randomUUID().toString(), Field.Store.YES));
 
-            document.add(new NumericDocValuesField("time", rm.getCreateTime()));
-            document.add(new StoredField("createTime", rm.getCreateTime()));
-            document.add(new StringField("traceId", (rm.getTraceId() == null) ? "" : rm.getTraceId(), Field.Store.YES));
-            docs.add(document);
+                document.add(new StringField("logLevel", (rm.getLogLevel() == null) ? "" : rm.getLogLevel(), Field.Store.YES));
+                document.add(new SortedDocValuesField("logLevel", new BytesRef((rm.getLogLevel() == null) ? "" : rm.getLogLevel())));
+
+                document.add(new TextField("content", (rm.getContent() == null) ? "" : rm.getContent(), Field.Store.YES));
+
+                document.add(new StringField("threadName", (rm.getThreadName() == null) ? "" : rm.getThreadName(), Field.Store.YES));
+                document.add(new StringField("methodName", (rm.getMethodName() == null) ? "" : rm.getMethodName(), Field.Store.YES));
+                document.add(new StringField("className", (rm.getClassName() == null) ? "" : rm.getClassName(), Field.Store.YES));
+
+                document.add(new NumericDocValuesField("time", rm.getCreateTime()));
+                document.add(new StoredField("createTime", rm.getCreateTime()));
+                document.add(new StringField("traceId", (rm.getTracerId() == null) ? "" : rm.getTracerId(), Field.Store.YES));
+                docs.add(document);
+            }
+
+
         }
         return docs;
     }

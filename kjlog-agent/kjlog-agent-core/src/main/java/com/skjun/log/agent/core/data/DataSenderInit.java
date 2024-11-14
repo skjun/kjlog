@@ -1,14 +1,18 @@
 package com.skjun.log.agent.core.data;
 
 
+import com.alibaba.fastjson2.JSON;
 import com.skjun.log.agent.core.config.LogConfig;
-import com.skjun.log.agent.core.dto.LogUpMessage;
-import com.skjun.log.agent.core.dto.TraceUpData;
 import com.skjun.log.agent.core.exception.base.AgentException;
-import com.skjun.log.agent.core.exception.code.AgentErrorCode;
 import com.skjun.log.agent.core.handler.AbstractUpHandler;
+import com.skjun.log.agent.core.montor.HardWareUtil;
+import com.skjun.log.agent.core.montor.SystemMonitorTask;
 import com.skjun.log.agent.core.util.AsyncPool;
 import com.skjun.log.agent.core.util.PropertiesUtil;
+import com.skjun.log.server.lib.dto.LogUpMessage;
+import com.skjun.log.server.lib.dto.TraceUpData;
+import com.skjun.log.server.lib.dto.detail.MonitorMessage;
+import com.skjun.log.server.lib.dto.detail.mon.*;
 
 
 import java.util.ArrayList;
@@ -59,6 +63,9 @@ public class DataSenderInit {
         // 初始化
         try {
             logConfig = PropertiesUtil.inintLogConfig();
+            if(logConfig.isSysMonitor()){
+                sysMonitorWorker(logConfig.getDelayTime());
+            }
         } catch (AgentException e) {
             e.printStackTrace();
             log.severe("DataSenderInit log config fail");
@@ -76,11 +83,14 @@ public class DataSenderInit {
         }
     }
 
+
+
     /**
      * 写入log队列
      */
     public static void offerLogger(LogUpMessage runLogMessage)  {
         //容量是否已满
+        runLogMessage.setServiceCode(logConfig.getServiceCode());
         boolean success = logBeanQueue.offer(runLogMessage);
         if (!success) {
             long failCount = FAIL_OFFER_COUNT.incrementAndGet();
@@ -93,6 +103,35 @@ public class DataSenderInit {
                 log.info("用户Logger已产生数量：" + successCount + "，当前队列积压数量：" + logBeanQueue.size());
             }
         }
+    }
+
+    /**
+     * 日志系统监控定时采集
+     */
+    public static void sysMonitorWorker(int delay) {
+        //用户中途打的各日志
+
+        SystemMonitorTask systemMonitorTask =  new SystemMonitorTask();
+
+        Runnable task = () -> {
+            // 这里是异步执行的任务
+
+            CpuInfo cpuInfo = HardWareUtil.getCpuInfo();
+            JvmInfo jvmInfo = HardWareUtil.getJvmInfo();
+            SystemDetails systemInfo = HardWareUtil.getSystemInfo();
+            MemoryInfo memoryInfo = HardWareUtil.getMemoryInfo(SizeEnum.GB);
+            List<SysFile> sysFiles = HardWareUtil.getSysFiles();
+            MonitorMessage monitorDo = new MonitorMessage(cpuInfo, jvmInfo, memoryInfo, sysFiles, systemInfo,logConfig.getMechineId());
+            System.out.println("异步定时任务执行: " + JSON.toJSON(monitorDo));
+            LogUpMessage<MonitorMessage> monitorMessageLogUpMessage = new LogUpMessage<>();
+            monitorMessageLogUpMessage.setType(LogUpMessage.MONITOR_YPE);
+            monitorMessageLogUpMessage.setMessage(monitorDo);
+            offerLogger(monitorMessageLogUpMessage);
+
+        };
+
+        // 启动任务，初始延迟1秒，之后每3秒执行一次
+        systemMonitorTask.startAsyncTask(task, 5, delay);
     }
 
     /**

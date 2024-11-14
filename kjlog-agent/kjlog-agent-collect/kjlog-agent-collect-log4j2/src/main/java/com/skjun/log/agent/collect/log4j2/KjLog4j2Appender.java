@@ -1,7 +1,8 @@
 package com.skjun.log.agent.collect.log4j2;
 
 import com.skjun.log.agent.core.data.DataSenderInit;
-import com.skjun.log.agent.core.dto.LogUpMessage;
+import com.skjun.log.server.lib.dto.LogUpMessage;
+import com.skjun.log.server.lib.dto.detail.LogMessage;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
@@ -32,7 +33,9 @@ public class KjLog4j2Appender extends AbstractAppender {
      * 转化为对象
      */
     private LogUpMessage getLogMessage(LogEvent loggingEvent) {
-        LogUpMessage logMessage = new LogUpMessage();
+
+        LogUpMessage<LogMessage> logUpMessage = new LogUpMessage<>();
+        LogMessage logMessage = new LogMessage();
         //设置链路唯一id
 //        logMessage.setTracerId(TracerHolder.getTracerId());
         logMessage.setClassName(loggingEvent.getLoggerName());
@@ -43,6 +46,8 @@ public class KjLog4j2Appender extends AbstractAppender {
         logMessage.setLogLevel(loggingEvent.getLevel().toString());
         logMessage.setCreateTime(loggingEvent.getNanoTime());
         logMessage.setContent(loggingEvent.getMessage().getFormattedMessage());
-        return logMessage;
+        logUpMessage.setMessage(logMessage);
+        logUpMessage.setType(LogUpMessage.LOG_TYPE);
+        return logUpMessage;
     }
 }

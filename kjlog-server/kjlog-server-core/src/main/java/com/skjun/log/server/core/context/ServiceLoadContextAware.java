@@ -1,5 +1,6 @@
 package com.skjun.log.server.core.context;
 
+import com.skjun.log.server.core.deal.LogDataAnalysisHandler;
 import com.skjun.log.server.core.deal.LogDataDealHandler;
 import com.skjun.log.server.core.inte.IDbStorageHandler;
 import com.skjun.log.server.core.inte.ISearchStorageHandler;
@@ -18,6 +19,7 @@ public class ServiceLoadContextAware implements ApplicationContextAware {
     private List<IServerReceiveHandler> serverReceiveHandlerList;
     private List<IDbStorageHandler> iDbStorageHandlers;
     private List<ISearchStorageHandler> iSearchStorageHandlers;
+    private List<LogDataAnalysisHandler> logDataAnalysisHandlers;
 
 
     private List<LogDataDealHandler> logDataDealHandlers;
@@ -27,6 +29,7 @@ public class ServiceLoadContextAware implements ApplicationContextAware {
         iDbStorageHandlers = new ArrayList<>(applicationContext.getBeansOfType(IDbStorageHandler.class).values());
         iSearchStorageHandlers = new ArrayList<>(applicationContext.getBeansOfType(ISearchStorageHandler.class).values());
         logDataDealHandlers = new ArrayList<>(applicationContext.getBeansOfType(LogDataDealHandler.class).values());
+        logDataAnalysisHandlers = new ArrayList<>(applicationContext.getBeansOfType(LogDataAnalysisHandler.class).values());
     }
 
     public List<LogDataDealHandler> getLogDataDealHandlers() {
@@ -45,5 +48,7 @@ public class ServiceLoadContextAware implements ApplicationContextAware {
         return iSearchStorageHandlers;
     }
 
-
+    public List<LogDataAnalysisHandler> getLogDataAnalysisHandlers() {
+        return logDataAnalysisHandlers;
+    }
 }

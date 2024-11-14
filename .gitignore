@@ -429,3 +429,4 @@ dist/
 npm-debug.log
 yarn-error.log
 /log/
+.DS_Store

@@ -41,8 +41,8 @@ public class TLogEntity implements Serializable {
 
     private Date logTime;
 
-    @Column(name = "app_name")
-    private String appName;
+    @Column(name = "service_code")
+    private String serviceCode;
 
 }
 

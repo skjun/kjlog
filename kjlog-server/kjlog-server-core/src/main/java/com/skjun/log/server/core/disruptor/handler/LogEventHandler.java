@@ -16,9 +16,9 @@ public class LogEventHandler implements WorkHandler<LogEvent> {
         if(serviceLoadContextAware == null){
             serviceLoadContextAware = SpringBeanUtil.getBean(ServiceLoadContextAware.class);
         }
-
-        System.out.println(Thread.currentThread().getName()+logEvent.getTraceUpData().toString());
-
+        //加载扫描的处理类组件
         serviceLoadContextAware.getLogDataDealHandlers().forEach(logDataDealHandler -> logDataDealHandler.handler(logEvent.getTraceUpData()));
+        // 加载扫描的分析类组件
+        serviceLoadContextAware.getLogDataAnalysisHandlers().forEach(logDataAnalysisHandler -> logDataAnalysisHandler.handler(logEvent.getTraceUpData()));
     }
 }

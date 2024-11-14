@@ -14,6 +14,13 @@ public class LogConfig implements Serializable {
     private int localUdpPort;
     private List<String>  redisServers;
 
+    private boolean  sysMonitor = false;
+
+    private int delayTime  = 60;
+    private String serviceCode;
+
+    private String mechineId;
+
     public String getType() {
         return type;
     }
@@ -44,5 +51,38 @@ public class LogConfig implements Serializable {
 
     public void setRedisServers(List<String> redisServers) {
         this.redisServers = redisServers;
+    }
+
+
+    public boolean isSysMonitor() {
+        return sysMonitor;
+    }
+
+    public void setSysMonitor(boolean sysMonitor) {
+        this.sysMonitor = sysMonitor;
+    }
+
+    public void setDelayTime(int delayTime) {
+        this.delayTime = delayTime;
+    }
+
+    public int getDelayTime() {
+        return delayTime;
+    }
+
+    public String getServiceCode() {
+        return serviceCode;
+    }
+
+    public void setServiceCode(String serviceCode) {
+        this.serviceCode = serviceCode;
+    }
+
+    public String getMechineId() {
+        return mechineId;
+    }
+
+    public void setMechineId(String mechineId) {
+        this.mechineId = mechineId;
     }
 }
